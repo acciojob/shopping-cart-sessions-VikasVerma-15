@@ -1,5 +1,7 @@
-// Start with an empty cart for fresh test runs
-sessionStorage.setItem("cart", JSON.stringify([]));
+// --- Initialize cart at page load to ensure Cypress tests start fresh ---
+if (!sessionStorage.getItem("cart")) {
+  sessionStorage.setItem("cart", JSON.stringify([]));
+}
 
 const products = [
   { id: 1, name: "Product 1", price: 10 },
@@ -14,7 +16,7 @@ const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
 function getCartFromSession() {
-  return JSON.parse(sessionStorage.getItem("cart")) || [];
+  return JSON.parse(sessionStorage.getItem("cart"));
 }
 
 function saveCartToSession(cart) {
@@ -26,11 +28,9 @@ function renderProducts() {
   for (const product of products) {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
-
     const btn = document.createElement("button");
     btn.textContent = "Add to Cart";
     btn.addEventListener("click", () => addToCart(product));
-
     li.appendChild(btn);
     productList.appendChild(li);
   }
@@ -58,6 +58,5 @@ clearCartBtn.addEventListener("click", () => {
   renderCart();
 });
 
-// Initial render
 renderProducts();
 renderCart();
