@@ -1,6 +1,3 @@
-// This is the boilerplate code given for you
-// You can modify this code
-// Product data
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -9,30 +6,75 @@ const products = [
   { id: 5, name: "Product 5", price: 50 },
 ];
 
-// DOM elements
 const productList = document.getElementById("product-list");
+const cartList = document.getElementById("cart-list");
+const clearCartBtn = document.getElementById("clear-cart-btn");
 
-// Render product list
+/* -----------------------
+   Session Storage Helpers
+------------------------ */
+function getCartFromSession() {
+  return JSON.parse(sessionStorage.getItem("cart")) || [];
+}
+
+function saveCartToSession(cart) {
+  sessionStorage.setItem("cart", JSON.stringify(cart));
+}
+
+/* -----------------------
+   Render Products
+------------------------ */
 function renderProducts() {
   products.forEach((product) => {
     const li = document.createElement("li");
-    li.innerHTML = `${product.name} - $${product.price} <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>`;
+    li.textContent = `${product.name} - $${product.price} `;
+
+    const button = document.createElement("button");
+    button.textContent = "Add to Cart";
+
+    button.addEventListener("click", () => addToCart(product));
+
+    li.appendChild(button);
     productList.appendChild(li);
   });
 }
 
-// Render cart list
-function renderCart() {}
+/* -----------------------
+   Render Cart
+------------------------ */
+function renderCart() {
+  cartList.innerHTML = "";
 
-// Add item to cart
-function addToCart(productId) {}
+  const cart = getCartFromSession();
 
-// Remove item from cart
-function removeFromCart(productId) {}
+  cart.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} - $${item.price}`;
+    cartList.appendChild(li);
+  });
+}
 
-// Clear cart
-function clearCart() {}
+/* -----------------------
+   Add to Cart
+------------------------ */
+function addToCart(product) {
+  const cart = getCartFromSession();
+  cart.push(product);
+  saveCartToSession(cart);
+  renderCart();
+}
 
-// Initial render
+/* -----------------------
+   Clear Cart
+------------------------ */
+clearCartBtn.addEventListener("click", () => {
+  sessionStorage.removeItem("cart");
+  renderCart();
+});
+
+/* -----------------------
+   Initial Load
+------------------------ */
 renderProducts();
 renderCart();
+
