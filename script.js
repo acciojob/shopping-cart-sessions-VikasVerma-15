@@ -1,4 +1,4 @@
-// Reset cart for fresh tests
+// Initialize session storage once
 if (!sessionStorage.getItem("initialized")) {
   sessionStorage.setItem("cart", JSON.stringify([]));
   sessionStorage.setItem("initialized", "true");
@@ -24,9 +24,10 @@ function saveCartToSession(cart) {
   sessionStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// Render products once
 function renderProducts() {
-  productList.innerHTML = ""; // Prevent duplicate buttons
-  products.forEach((product) => {
+  productList.innerHTML = ""; // Clear old list
+  products.forEach(product => {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
     const btn = document.createElement("button");
@@ -37,22 +38,29 @@ function renderProducts() {
   });
 }
 
+// Render cart
 function renderCart() {
   cartList.innerHTML = "";
-  getCartFromSession().forEach((item) => {
+  getCartFromSession().forEach(item => {
     const li = document.createElement("li");
     li.textContent = `${item.name} - $${item.price}`;
     cartList.appendChild(li);
   });
 }
 
+// Add to cart
 function addToCart(product) {
   const cart = getCartFromSession();
-  cart.push(product); // Add only clicked product
-  saveCartToSession(cart);
-  renderCart();
+
+  // Prevent duplicate entries
+  if (!cart.some(item => item.id === product.id)) {
+    cart.push(product);
+    saveCartToSession(cart);
+    renderCart();
+  }
 }
 
+// Clear cart
 clearCartBtn.addEventListener("click", () => {
   sessionStorage.setItem("cart", JSON.stringify([]));
   renderCart();
