@@ -1,4 +1,4 @@
-// ✅ Cypress-safe initialization
+sessionStorage.clear();
 if (!sessionStorage.getItem("initialized")) {
   sessionStorage.clear();
   sessionStorage.setItem("initialized", "true");
