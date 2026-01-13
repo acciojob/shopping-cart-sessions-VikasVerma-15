@@ -1,5 +1,5 @@
-// Clear cart at page load to prevent leftover data from previous tests
-sessionStorage.removeItem("cart");
+// Start with an empty cart for fresh test runs
+sessionStorage.setItem("cart", JSON.stringify([]));
 
 const products = [
   { id: 1, name: "Product 1", price: 10 },
@@ -13,20 +13,16 @@ const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
-// Get cart from sessionStorage
 function getCartFromSession() {
   return JSON.parse(sessionStorage.getItem("cart")) || [];
 }
 
-// Save cart to sessionStorage
 function saveCartToSession(cart) {
   sessionStorage.setItem("cart", JSON.stringify(cart));
 }
 
-// Render products
 function renderProducts() {
   productList.innerHTML = "";
-
   for (const product of products) {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
@@ -40,11 +36,9 @@ function renderProducts() {
   }
 }
 
-// Render cart
 function renderCart() {
   cartList.innerHTML = "";
   const cart = getCartFromSession();
-
   for (const item of cart) {
     const li = document.createElement("li");
     li.textContent = `${item.name} - $${item.price}`;
@@ -52,17 +46,15 @@ function renderCart() {
   }
 }
 
-// Add product to cart
 function addToCart(product) {
   const cart = getCartFromSession();
-  cart.push(product); // accumulate during test
+  cart.push(product);
   saveCartToSession(cart);
   renderCart();
 }
 
-// Clear cart
 clearCartBtn.addEventListener("click", () => {
-  sessionStorage.removeItem("cart");
+  sessionStorage.setItem("cart", JSON.stringify([]));
   renderCart();
 });
 
