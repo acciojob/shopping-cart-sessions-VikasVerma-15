@@ -1,4 +1,4 @@
-// --- RESET sessionStorage for Cypress or fresh load ---
+// Reset sessionStorage so Cypress sees a clean cart
 sessionStorage.setItem("cart", JSON.stringify([]));
 
 const products = [
@@ -13,7 +13,7 @@ const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
-// Always returns an array
+// Always return an array
 function getCartFromSession() {
   return JSON.parse(sessionStorage.getItem("cart")) || [];
 }
@@ -59,3 +59,4 @@ clearCartBtn.addEventListener("click", () => {
 // Initial render
 renderProducts();
 renderCart();
+
