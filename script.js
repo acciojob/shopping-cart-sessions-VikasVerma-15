@@ -1,3 +1,5 @@
+sessionStorage.clear();
+
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -46,7 +48,9 @@ function renderCart() {
 }
 
 function addToCart(product) {
-  saveCartToSession([product]);
+  const cart = getCartFromSession();
+  cart.push(product);
+  saveCartToSession(cart);
   renderCart();
 }
 
