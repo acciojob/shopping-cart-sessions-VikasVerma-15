@@ -1,9 +1,3 @@
-sessionStorage.clear();
-if (!sessionStorage.getItem("initialized")) {
-  sessionStorage.clear();
-  sessionStorage.setItem("initialized", "true");
-}
-
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -33,7 +27,6 @@ function renderProducts() {
 
     const button = document.createElement("button");
     button.textContent = "Add to Cart";
-
     button.addEventListener("click", () => addToCart(product));
 
     li.appendChild(button);
@@ -53,9 +46,7 @@ function renderCart() {
 }
 
 function addToCart(product) {
-  const cart = getCartFromSession();
-  cart.push(product);
-  saveCartToSession(cart);
+  saveCartToSession([product]);
   renderCart();
 }
 
