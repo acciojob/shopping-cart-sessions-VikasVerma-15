@@ -1,5 +1,8 @@
-// Reset cart at the start (Cypress-friendly)
-sessionStorage.setItem("cart", JSON.stringify([]));
+// Reset cart for fresh tests
+if (!sessionStorage.getItem("initialized")) {
+  sessionStorage.setItem("cart", JSON.stringify([]));
+  sessionStorage.setItem("initialized", "true");
+}
 
 const products = [
   { id: 1, name: "Product 1", price: 10 },
@@ -21,21 +24,19 @@ function saveCartToSession(cart) {
   sessionStorage.setItem("cart", JSON.stringify(cart));
 }
 
-// Render products once
 function renderProducts() {
-  productList.innerHTML = ""; // Clear old list
+  productList.innerHTML = ""; // Prevent duplicate buttons
   products.forEach((product) => {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
-    const button = document.createElement("button");
-    button.textContent = "Add to Cart";
-    button.addEventListener("click", () => addToCart(product));
-    li.appendChild(button);
+    const btn = document.createElement("button");
+    btn.textContent = "Add to Cart";
+    btn.addEventListener("click", () => addToCart(product));
+    li.appendChild(btn);
     productList.appendChild(li);
   });
 }
 
-// Render cart
 function renderCart() {
   cartList.innerHTML = "";
   getCartFromSession().forEach((item) => {
@@ -45,15 +46,13 @@ function renderCart() {
   });
 }
 
-// Add to cart
 function addToCart(product) {
   const cart = getCartFromSession();
-  cart.push(product);
+  cart.push(product); // Add only clicked product
   saveCartToSession(cart);
-  renderCart(); // only update cart
+  renderCart();
 }
 
-// Clear cart
 clearCartBtn.addEventListener("click", () => {
   sessionStorage.setItem("cart", JSON.stringify([]));
   renderCart();
@@ -62,4 +61,3 @@ clearCartBtn.addEventListener("click", () => {
 // Initial render
 renderProducts();
 renderCart();
-
