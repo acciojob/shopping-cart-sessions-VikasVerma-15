@@ -51,12 +51,10 @@ function renderCart() {
 }
 
 function addToCart(product) {
-  const cart = getCartFromSession();
-  cart.push(product);
+  const cart = [product];
   saveCartToSession(cart);
   renderCart();
 }
-
 clearCartBtn.addEventListener("click", () => {
   sessionStorage.removeItem("cart");
   renderCart();
