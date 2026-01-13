@@ -1,4 +1,4 @@
-// Reset sessionStorage so Cypress sees a clean cart
+// Reset cart at the start (Cypress-friendly)
 sessionStorage.setItem("cart", JSON.stringify([]));
 
 const products = [
@@ -13,7 +13,6 @@ const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
-// Always return an array
 function getCartFromSession() {
   return JSON.parse(sessionStorage.getItem("cart")) || [];
 }
@@ -22,19 +21,21 @@ function saveCartToSession(cart) {
   sessionStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// Render products once
 function renderProducts() {
-  productList.innerHTML = "";
+  productList.innerHTML = ""; // Clear old list
   products.forEach((product) => {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
-    const btn = document.createElement("button");
-    btn.textContent = "Add to Cart";
-    btn.addEventListener("click", () => addToCart(product));
-    li.appendChild(btn);
+    const button = document.createElement("button");
+    button.textContent = "Add to Cart";
+    button.addEventListener("click", () => addToCart(product));
+    li.appendChild(button);
     productList.appendChild(li);
   });
 }
 
+// Render cart
 function renderCart() {
   cartList.innerHTML = "";
   getCartFromSession().forEach((item) => {
@@ -44,13 +45,15 @@ function renderCart() {
   });
 }
 
+// Add to cart
 function addToCart(product) {
   const cart = getCartFromSession();
   cart.push(product);
   saveCartToSession(cart);
-  renderCart();
+  renderCart(); // only update cart
 }
 
+// Clear cart
 clearCartBtn.addEventListener("click", () => {
   sessionStorage.setItem("cart", JSON.stringify([]));
   renderCart();
