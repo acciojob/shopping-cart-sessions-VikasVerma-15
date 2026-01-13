@@ -1,3 +1,9 @@
+// ✅ Cypress-safe initialization
+if (!sessionStorage.getItem("initialized")) {
+  sessionStorage.clear();
+  sessionStorage.setItem("initialized", "true");
+}
+
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -10,9 +16,6 @@ const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
-/* -----------------------
-   Session Storage Helpers
------------------------- */
 function getCartFromSession() {
   return JSON.parse(sessionStorage.getItem("cart")) || [];
 }
@@ -21,9 +24,6 @@ function saveCartToSession(cart) {
   sessionStorage.setItem("cart", JSON.stringify(cart));
 }
 
-/* -----------------------
-   Render Products
------------------------- */
 function renderProducts() {
   products.forEach((product) => {
     const li = document.createElement("li");
@@ -39,12 +39,8 @@ function renderProducts() {
   });
 }
 
-/* -----------------------
-   Render Cart
------------------------- */
 function renderCart() {
   cartList.innerHTML = "";
-
   const cart = getCartFromSession();
 
   cart.forEach((item) => {
@@ -54,9 +50,6 @@ function renderCart() {
   });
 }
 
-/* -----------------------
-   Add to Cart
------------------------- */
 function addToCart(product) {
   const cart = getCartFromSession();
   cart.push(product);
@@ -64,17 +57,10 @@ function addToCart(product) {
   renderCart();
 }
 
-/* -----------------------
-   Clear Cart
------------------------- */
 clearCartBtn.addEventListener("click", () => {
   sessionStorage.removeItem("cart");
   renderCart();
 });
 
-/* -----------------------
-   Initial Load
------------------------- */
 renderProducts();
 renderCart();
-
