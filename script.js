@@ -1,6 +1,3 @@
-// CLEAR CART ON EVERY PAGE LOAD (IMPORTANT FOR CYPRESS)
-sessionStorage.removeItem("cart");
-
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -24,44 +21,37 @@ function saveCartToSession(cart) {
 function renderProducts() {
   productList.innerHTML = "";
 
-  for (let i = 0; i < products.length; i++) {
-    const product = products[i];
-
+  products.forEach((product) => {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
 
-    const btn = document.createElement("button");
-    btn.innerText = "Add to Cart";
+    const button = document.createElement("button");
+    button.textContent = "Add to Cart";
+    button.addEventListener("click", () => addToCart(product));
 
-    btn.addEventListener("click", function () {
-      addToCart(product);
-    });
-
-    li.appendChild(btn);
+    li.appendChild(button);
     productList.appendChild(li);
-  }
+  });
 }
 
 function renderCart() {
   cartList.innerHTML = "";
   const cart = getCartFromSession();
 
-  for (let i = 0; i < cart.length; i++) {
-    const item = cart[i];
+  cart.forEach((item) => {
     const li = document.createElement("li");
     li.textContent = `${item.name} - $${item.price}`;
     cartList.appendChild(li);
-  }
+  });
 }
 
 function addToCart(product) {
-  const cart = getCartFromSession();
-  cart.push(product);
-  saveCartToSession(cart);
+
+  saveCartToSession([product]);
   renderCart();
 }
 
-clearCartBtn.addEventListener("click", function () {
+clearCartBtn.addEventListener("click", () => {
   sessionStorage.removeItem("cart");
   renderCart();
 });
