@@ -1,7 +1,5 @@
-// Initialize cart if it doesn't exist
-if (!sessionStorage.getItem("cart")) {
-  sessionStorage.setItem("cart", JSON.stringify([]));
-}
+// --- RESET sessionStorage for Cypress or fresh load ---
+sessionStorage.setItem("cart", JSON.stringify([]));
 
 const products = [
   { id: 1, name: "Product 1", price: 10 },
@@ -26,31 +24,28 @@ function saveCartToSession(cart) {
 
 function renderProducts() {
   productList.innerHTML = "";
-  for (const product of products) {
+  products.forEach((product) => {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
-
     const btn = document.createElement("button");
     btn.textContent = "Add to Cart";
     btn.addEventListener("click", () => addToCart(product));
-
     li.appendChild(btn);
     productList.appendChild(li);
-  }
+  });
 }
 
 function renderCart() {
   cartList.innerHTML = "";
-  const cart = getCartFromSession();
-  for (const item of cart) {
+  getCartFromSession().forEach((item) => {
     const li = document.createElement("li");
     li.textContent = `${item.name} - $${item.price}`;
     cartList.appendChild(li);
-  }
+  });
 }
 
 function addToCart(product) {
-  const cart = getCartFromSession(); // always an array now
+  const cart = getCartFromSession();
   cart.push(product);
   saveCartToSession(cart);
   renderCart();
