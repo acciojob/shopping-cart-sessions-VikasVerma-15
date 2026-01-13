@@ -25,6 +25,8 @@ function saveCartToSession(cart) {
 }
 
 function renderProducts() {
+  productList.innerHTML = "";
+
   products.forEach((product) => {
     const li = document.createElement("li");
     li.textContent = `${product.name} - $${product.price} `;
@@ -51,10 +53,12 @@ function renderCart() {
 }
 
 function addToCart(product) {
-  const cart = [product];
+  const cart = getCartFromSession();
+  cart.push(product);
   saveCartToSession(cart);
   renderCart();
 }
+
 clearCartBtn.addEventListener("click", () => {
   sessionStorage.removeItem("cart");
   renderCart();
